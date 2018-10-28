@@ -11,10 +11,24 @@ class proxysql::reload_config {
 
   $mycnf_file_name = $proxysql::mycnf_file_name
     exec {'reload-config':
-        command     => "/usr/bin/mysql --defaults-extra-file=${mycnf_file_name} --execute=\"
+        command     => "/usr/bin/mysql --defaults-file=${mycnf_file_name} --execute=\"
           LOAD ADMIN VARIABLES FROM CONFIG; \
           LOAD ADMIN VARIABLES TO RUNTIME; \
           SAVE ADMIN VARIABLES TO DISK; \
+          DELETE FROM mysql_servers; \
+          LOAD MYSQL SERVERS FROM CONFIG; \
+          LOAD MYSQL SERVERS TO RUNTIME; \
+          SAVE MYSQL SERVERS TO DISK; \
+          DELETE FROM mysql_users; \
+          LOAD MYSQL USERS FROM CONFIG; \
+          LOAD MYSQL USERS TO RUNTIME; \
+          SAVE MYSQL USERS TO DISK; \
+          LOAD SCHEDULER FROM CONFIG; \
+          LOAD SCHEDULER TO RUNTIME; \
+          SAVE SCHEDULER TO DISK; \
+          LOAD MYSQL QUERY RULES FROM CONFIG; \
+          LOAD MYSQL QUERY RULES TO RUNTIME; \
+          SAVE MYSQL QUERY RULES TO DISK; \
           LOAD MYSQL VARIABLES FROM CONFIG; \
           LOAD MYSQL VARIABLES TO RUNTIME; \
           SAVE MYSQL VARIABLES TO DISK; \"
